@@ -1,0 +1,22 @@
+{
+  "name": "store-monorepo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "workspaces": [
+    "services/*",
+    "facades/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --workspace=user-service\" \"npm run dev --workspace=order-service\" \"npm run dev --workspace=product-service\" \"npm run dev --workspace=store-facade\""
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}
