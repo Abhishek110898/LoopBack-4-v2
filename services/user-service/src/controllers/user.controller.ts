@@ -19,11 +19,14 @@ import {
 } from '@loopback/rest';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
+import { AuthService } from '../services/authentication.service';
+import {inject} from '@loopback/core'
 
 export class UserController {
   constructor(
     @repository(UserRepository)
     public userRepository : UserRepository,
+    @inject('services.AuthService') private authService: AuthService,
   ) {}
 
   @post('/users')
@@ -43,8 +46,23 @@ export class UserController {
       },
     })
     user: Omit<User, 'id' | 'createdOn' | 'modifiedOn'>,
+    
   ): Promise<User> {
     return this.userRepository.create(user);
+  }
+
+  @post('/user/login')
+  @response(200, {
+    description: 'User login success',
+    content: {'application/json': {schema: {type: 'object', properties: {token: {type: 'string'}}}}},
+  })
+  async login(
+    @requestBody({
+      content: {'application/json': {schema: {type: 'object', properties: {email: {type: 'string'}, password: {type: 'string'}}}}},
+    })
+    userData: {email: string; password: string},
+  ): Promise<{token: string}> {
+    return this.authService.login(userData.email, userData.password);
   }
 
   @get('/users/count')

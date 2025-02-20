@@ -9,6 +9,10 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import { AuthService } from './services/authentication.service';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 
 export {ApplicationConfig};
 
@@ -29,6 +33,8 @@ export class UserServiceApplication extends BootMixin(
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
+
+    this.bind('services.AuthService').toClass(AuthService);
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here

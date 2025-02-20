@@ -29,13 +29,13 @@ const config = {
       template: {
         method: 'POST',
         url: 'http://localhost:3002/users', 
-        body: { name: "{name}", role: "{role}", createdOn: "{createdOn}", modifiedOn: "{modifiedOn}" }, // Request body format
+        body: { firstName: "{firstName}",lastName: "{lastName}", email:"{email}", password:"{password}", role: "{role}", createdOn: "{createdOn}", modifiedOn: "{modifiedOn}" }, // Request body format
         headers: {
           'Content-Type': 'application/json',
         },
       },
       functions: {
-        createUser: ['name', 'role', 'createdOn', 'modifiedOn'], 
+        createUser: ['firstName', "lastName", "email", "password", 'role', 'createdOn', 'modifiedOn'], 
       },
     },
     {
@@ -45,6 +45,19 @@ const config = {
       },
       functions: {
         getUserRole: ['id'],
+      },
+    },
+    {
+      template: {
+        method: 'POST',
+        url: 'http://localhost:3002/user/login', 
+        body: { email: "{email}", password: "{password}" }, // Request body format
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      functions: {
+        loginUser: ['email', 'password'], 
       },
     },
   ],

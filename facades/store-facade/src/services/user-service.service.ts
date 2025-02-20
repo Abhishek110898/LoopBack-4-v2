@@ -5,8 +5,9 @@ import {UserServiceDataSource} from '../datasources';
 export interface UserService {
   getUsers(): Promise<any[]>;
   getUserById(id: string): Promise<any>;
-  createUser(name: string, role: string, createdOn: string, modifiedOn: string) : Promise<any>;
+  createUser(firstName: string, lastName:string, email:string, password:string, role: string, createdOn: string, modifiedOn: string) : Promise<any>;
   getUserRole(id: string): Promise<any>;
+  loginUser(email:string, password:string): Promise<any>;
   // this is where you define the Node.js methods that will be
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.

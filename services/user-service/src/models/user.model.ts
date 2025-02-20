@@ -33,8 +33,15 @@ export class User extends Entity {
   @property({
     type: 'string',
     required: true,
+    name: 'first_name',
   })
-  name: string;
+  firstName: string;
+
+  @property({
+    type: 'string',
+    name: 'last_name',
+  })
+  lastName: string;
 
   @property({
     type: 'string',
@@ -44,6 +51,19 @@ export class User extends Entity {
     },
   })
   role: string;
+
+  @property({
+    type: 'string',
+    required: true,
+    unique: true
+  })
+  email?: string;
+
+  @property({
+    type: 'string',
+    required: true
+  })
+  password?: string;
 
   @property({
     type: 'string',

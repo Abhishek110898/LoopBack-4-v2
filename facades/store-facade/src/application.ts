@@ -9,6 +9,9 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import { AuthenticationComponent, AuthenticationBindings, Strategies } from 'loopback4-authentication';
+import { User } from './models/authUser.model';
+import { BearerTokenVerifyProvider } from './providers/auth.provider';
 
 export {ApplicationConfig};
 
@@ -24,11 +27,20 @@ export class StoreFacadeApplication extends BootMixin(
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
 
+    //add authentication component
+    this.component(AuthenticationComponent)
+
+    this.bind(Strategies.Passport.BEARER_TOKEN_VERIFIER).toProvider(
+      BearerTokenVerifyProvider,
+    )
+
     // Customize @loopback/rest-explorer configuration here
     this.configure(RestExplorerBindings.COMPONENT).to({
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
+
+    this.bind(AuthenticationBindings.USER_MODEL).to(User);
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
