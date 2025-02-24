@@ -9,6 +9,7 @@ import {
 } from 'loopback4-authorization';
 import {Getter, inject} from '@loopback/core';
 import { User } from './models/authUser.model';
+import { RateLimitSecurityBindings, RateLimitAction } from 'loopback4-ratelimiter';
 
 export class MySequence implements SequenceHandler {
     constructor(
@@ -21,6 +22,8 @@ export class MySequence implements SequenceHandler {
         protected authenticateRequest: AuthenticateFn<User>,
         @inject(AuthorizationBindings.AUTHORIZE_ACTION)
         protected checkAuthorisation: AuthorizeFn,
+        @inject(RateLimitSecurityBindings.RATELIMIT_SECURITY_ACTION)
+        protected rateLimitAction: RateLimitAction,
       ) {}
     
       async handle(context: RequestContext) {
@@ -39,6 +42,7 @@ export class MySequence implements SequenceHandler {
           if (!isAccessAllowed) {
             throw new HttpErrors.Forbidden(AuthorizeErrorKeys.NotAllowedAccess);
           }
+          await this.rateLimitAction(request, response);
           const result = await this.invoke(route, args);
           this.send(response, result);
         } catch (err) {

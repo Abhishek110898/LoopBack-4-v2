@@ -1,10 +1,20 @@
 import {inject} from '@loopback/core';
-import {get, param,requestBody, post, response, getModelSchemaRef} from '@loopback/rest';
+import {get, param,requestBody, post, response, getModelSchemaRef, Request} from '@loopback/rest';
 import {ProductService} from '../services/product-service.service';
 import {OrderService} from '../services/order-service.service';
 import {UserService} from '../services/user-service.service';
 import { authenticate, STRATEGY } from 'loopback4-authentication';
 import { authorize } from 'loopback4-authorization';
+import { ratelimit } from 'loopback4-ratelimiter';
+// const rateLimitKeyGen = (req: Request) => {
+//   const token =
+//     (req.headers &&
+//       req.headers.authorization &&
+//       req.headers.authorization.replace(/bearer /i, '')) ||
+//     '';
+//   return token;
+// };
+
 
 
 export class StoreController {
@@ -13,6 +23,7 @@ export class StoreController {
     @inject('services.OrderService') private orderService: OrderService,
     @inject('services.UserService') private userService: UserService,
   ) {}
+
 
   @authenticate(STRATEGY.BEARER)
   @get('/store/products-with-orders')
@@ -39,6 +50,10 @@ export class StoreController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  // @ratelimit(true, {
+  //   max: 5,
+  //   keyGenerator: rateLimitKeyGen,
+  // })
   @get('/store/users')
   async getUsers() {
     return this.userService.getUsers();

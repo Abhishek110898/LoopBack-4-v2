@@ -13,6 +13,8 @@ import { AuthenticationComponent, AuthenticationBindings, Strategies } from 'loo
 import { User } from './models/authUser.model';
 import { BearerTokenVerifyProvider } from './providers/auth.provider';
 import { AuthorizationBindings, AuthorizationComponent } from 'loopback4-authorization';
+import { RateLimiterComponent, RateLimitSecurityBindings } from 'loopback4-ratelimiter';
+
 
 export {ApplicationConfig};
 
@@ -40,6 +42,15 @@ export class StoreFacadeApplication extends BootMixin(
       allowAlwaysPaths: ['/explorer', '/', '/favicon.ico'],
     });
     this.component(AuthorizationComponent);
+
+    this.bind(RateLimitSecurityBindings.CONFIG).to({
+      name: 'redis',
+      type: 'RedisStore',
+      max:5
+    });
+
+    this.component(RateLimiterComponent);
+    
 
     // Customize @loopback/rest-explorer configuration here
     this.configure(RestExplorerBindings.COMPONENT).to({
