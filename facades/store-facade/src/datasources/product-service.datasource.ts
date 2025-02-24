@@ -29,7 +29,7 @@ const config = {
       template: {
         method: 'POST',
         url: 'http://localhost:3001/products', // ✅ Create user API
-        body: '{ "name": "{name}", "price": "{price}" }', // Request body format
+        body: { name: "{name}", price: "{price}" }, // Request body format
         headers: {
           'Content-Type': 'application/json',
         },

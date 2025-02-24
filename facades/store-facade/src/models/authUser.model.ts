@@ -44,7 +44,7 @@ import { EntityWithIdentifier, IAuthUser } from 'loopback4-authentication';
         type: 'string',
         required: true,
         jsonSchema: {
-          enum: ["superAdmin", "admin", "subscriber"], // Ensures only valid enum values are accepted
+          enum: ["SuperAdmin", "Admin", "Subscriber"], // Ensures only valid enum values are accepted
         },
       })
       role: string;

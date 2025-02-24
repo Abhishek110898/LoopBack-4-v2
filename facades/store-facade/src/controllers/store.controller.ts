@@ -4,6 +4,7 @@ import {ProductService} from '../services/product-service.service';
 import {OrderService} from '../services/order-service.service';
 import {UserService} from '../services/user-service.service';
 import { authenticate, STRATEGY } from 'loopback4-authentication';
+import { authorize } from 'loopback4-authorization';
 
 
 export class StoreController {
@@ -89,6 +90,7 @@ export class StoreController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['SuperAdmin'], resource:'role'})
   @post('/store/products')
   async createProduct(
     @requestBody() productData: {name: string, price: number},

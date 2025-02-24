@@ -4,8 +4,8 @@ import {ProductServiceDataSource} from '../datasources';
 
 export interface ProductService {
   getProducts(): Promise<any[]>;
-  getProductById(id: string): Promise<any>;
-  createProduct(name: string, quantity: number) : Promise<any>; // Fetch a single product by ID
+  getProductById(id: string): Promise<any>; // Fetch a single product by ID
+  createProduct(name: string, price: number) : Promise<any>; 
   // this is where you define the Node.js methods that will be
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.
