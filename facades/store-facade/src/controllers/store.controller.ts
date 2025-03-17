@@ -6,6 +6,7 @@ import {UserService} from '../services/user-service.service';
 import { authenticate, STRATEGY } from 'loopback4-authentication';
 import { authorize } from 'loopback4-authorization';
 import { ratelimit } from 'loopback4-ratelimiter';
+import { INotification, NotificationBindings } from 'loopback4-notifications';
 // const rateLimitKeyGen = (req: Request) => {
 //   const token =
 //     (req.headers &&
@@ -15,6 +16,35 @@ import { ratelimit } from 'loopback4-ratelimiter';
 //   return token;
 // };
 
+const userNotification = {
+  subject: "Yayyyy! A new user just signed up.",
+  body: "Ahoy! A new user just signed up.",
+  receiver: {
+    "to": [
+      {
+        "id": "abhishek.vinayak@sourcefuse.com",
+        "name": "Abhishek"
+      }
+    ]
+  },
+  sentDate: new Date(),
+  type: 1,
+}
+
+const orderNotification = {
+  subject: "Yayyyy! We just received an order.",
+  body: "Kachingg! We just received an order.",
+  receiver: {
+    "to": [
+      {
+        "id": "alf51@ethereal.email",
+        "name": "Abhishek",
+      }
+    ]
+  },
+  sentDate: new Date(),
+  type: 1,
+}
 
 
 export class StoreController {
@@ -22,6 +52,8 @@ export class StoreController {
     @inject('services.ProductService') private productService: ProductService,
     @inject('services.OrderService') private orderService: OrderService,
     @inject('services.UserService') private userService: UserService,
+    @inject(NotificationBindings.NotificationProvider)
+    private readonly notifProvider: INotification,
   ) {}
 
 
@@ -72,6 +104,7 @@ export class StoreController {
   async createUser(
     @requestBody() userData: {firstName: string; lastName:string; email:string; password:string; role: string; createdOn: string; modifiedOn: string},
   ) {
+    await this.notifProvider.publish(userNotification);
     return this.userService.createUser(userData.firstName, userData.lastName, userData.email, userData.password, userData.role, userData.createdOn, userData.modifiedOn);
   }
 

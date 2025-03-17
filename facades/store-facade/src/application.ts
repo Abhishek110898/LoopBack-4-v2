@@ -15,6 +15,15 @@ import { BearerTokenVerifyProvider } from './providers/auth.provider';
 import { AuthorizationBindings, AuthorizationComponent } from 'loopback4-authorization';
 import { RateLimiterComponent, RateLimitSecurityBindings } from 'loopback4-ratelimiter';
 
+import {
+  NotificationsComponent,
+  NotificationBindings,
+} from 'loopback4-notifications';
+import {
+  NodemailerProvider,
+  NodemailerBindings,
+} from 'loopback4-notifications/nodemailer';
+
 
 export {ApplicationConfig};
 
@@ -46,7 +55,7 @@ export class StoreFacadeApplication extends BootMixin(
     this.bind(RateLimitSecurityBindings.CONFIG).to({
       name: 'redis',
       type: 'RedisStore',
-      max:5
+      max:15
     });
 
     this.component(RateLimiterComponent);
@@ -59,6 +68,33 @@ export class StoreFacadeApplication extends BootMixin(
     this.component(RestExplorerComponent);
 
     this.bind(AuthenticationBindings.USER_MODEL).to(User);
+
+    this.component(NotificationsComponent);
+
+    this.bind(NotificationBindings.Config).to({
+      sendToMultipleReceivers: false,
+      senderEmail: 'support@myapp.com',
+    });
+
+    this.bind(NodemailerBindings.Config).to({
+      pool: true,
+      maxConnections: 100,
+      url: '',
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'alf51@ethereal.email',
+        pass: 'mmQr8TzT2Fa3VyN52v',
+      },
+      tls: {
+        rejectUnauthorized: true,
+      },
+    });
+
+    this.bind(NotificationBindings.EmailProvider).toProvider(
+      NodemailerProvider,
+    );
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
