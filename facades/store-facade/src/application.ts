@@ -23,6 +23,8 @@ import {
   NodemailerProvider,
   NodemailerBindings,
 } from 'loopback4-notifications/nodemailer';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 
 export {ApplicationConfig};
@@ -39,7 +41,6 @@ export class StoreFacadeApplication extends BootMixin(
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
   
-
     //add authentication component
     this.component(AuthenticationComponent)
 
@@ -84,8 +85,8 @@ export class StoreFacadeApplication extends BootMixin(
       port: 587,
       secure: false,
       auth: {
-        user: 'alf51@ethereal.email',
-        pass: 'mmQr8TzT2Fa3VyN52v',
+        user: process.env.ETHEREAL_USER,
+        pass: process.env.ETHEREAL_PASS,
       },
       tls: {
         rejectUnauthorized: true,

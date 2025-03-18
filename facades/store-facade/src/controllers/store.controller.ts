@@ -7,6 +7,7 @@ import { authenticate, STRATEGY } from 'loopback4-authentication';
 import { authorize } from 'loopback4-authorization';
 import { ratelimit } from 'loopback4-ratelimiter';
 import { INotification, NotificationBindings } from 'loopback4-notifications';
+import { ExternalService } from '../services/external-service.service';
 // const rateLimitKeyGen = (req: Request) => {
 //   const token =
 //     (req.headers &&
@@ -52,6 +53,7 @@ export class StoreController {
     @inject('services.ProductService') private productService: ProductService,
     @inject('services.OrderService') private orderService: OrderService,
     @inject('services.UserService') private userService: UserService,
+    @inject('services.ExternalService') private externalService: ExternalService,
     @inject(NotificationBindings.NotificationProvider)
     private readonly notifProvider: INotification,
   ) {}
@@ -149,7 +151,12 @@ export class StoreController {
   @authenticate(STRATEGY.BEARER)
   @get('/store/orders')
   async getOrders() {
-    return this.orderService.getOrders();
+    const orders =  await this.orderService.getOrders();
+    const externalData = await this.externalService.getExternalData();
+    return orders.map((order, index) => ({
+      ...order,
+      externalData: externalData[index]
+    }));
   }
 
   @authenticate(STRATEGY.BEARER)
@@ -163,6 +170,7 @@ export class StoreController {
   async createOrder(
     @requestBody() orderData: {productId: string, userId: string, quantity: number, price: number},
   ) {
+    await this.notifProvider.publish(orderNotification);
     return this.orderService.createOrder(orderData.productId, orderData.userId, orderData.quantity, orderData.price);
   }
 }

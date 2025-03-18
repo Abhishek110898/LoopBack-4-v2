@@ -1,7 +1,5 @@
 import {inject} from '@loopback/core';
 import {juggler} from '@loopback/repository';
-import * as dotenv from 'dotenv';
-dotenv.config();
 
 const config = {
     name: 'redis',
